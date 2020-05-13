@@ -3,7 +3,7 @@ const path = require('path');
 const resolve = p => path.resolve(__dirname, '../', p);
 
 const base = process.env.GH ? '/menu/' : '/';
-
+console.log('base',base)
 module.exports = {
   title: 'B 端菜单组件',
   base,

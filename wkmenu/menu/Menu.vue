@@ -44,11 +44,15 @@
     data() {
       return {
         menuArr: [],
-        curId: null|| localStorage.getItem('cusMenu-curId'),
-        switchAllFlag:false
+        curId: null || localStorage.getItem('CUSMENU-CURID'),
+        switchAllFlag: false,
       };
     },
     props: {
+      isRefresh: {
+        type: Boolean,
+        default: false,
+      },
       curMenuArr: {
         type: Array,
         default: [],
@@ -69,59 +73,57 @@
           console.log('展示子页面');
           this.menuArr[index].dropDown = !this.menuArr[index].dropDown;
           this.$set(this.menuArr, index, this.menuArr[index]);
-          this.$emit('toPage',item,'haveChild');
+          this.$emit('toPage', item, index, 'haveChild');
         } else {
           this.curId = item.id;
-             localStorage.setItem('cusMenu-curId',item.id)
+          localStorage.setItem('CUSMENU-CURID', item.id);
           console.log('跳转');
           //直接跳转
-          this.$emit('toPage',item,'noHaveChild');
-          window.location.href=item.url
+          this.$emit('toPage', item, index, 'noHaveChild');
+          window.location.href = item.url;
         }
       },
       toggleSonItem(item, sonItem, index) {
-
         this.curId = sonItem.id;
-        localStorage.setItem('cusMenu-curId',sonItem.id)
-         console.log('item', item, sonItem, index);
+        localStorage.setItem('CUSMENU-CURID', sonItem.id);
+        console.log('item', item, sonItem, index);
         console.log('二级直接跳转');
-         this.$emit('toSonPage', item, sonItem, index);
-           window.location.href=sonItem.url
+        this.$emit('toSonPage', item, sonItem, index);
+        window.location.href = sonItem.url;
       },
       toggleMenuSwitch() {
-        this.switchAllFlag=!this.switchAllFlag
-        this.menuArr.forEach((item, index) => {
+        this.switchAllFlag = !this.switchAllFlag;
+        this.menuArr.forEach((item) => {
           item.dropDown = this.switchAllFlag;
         });
-
       },
     },
     mounted() {
       //页面加载时根据，storage记录id打开页面????todo,跳转是否相同域名需要用vue.push
-
+      this.curId = localStorage.getItem('CUSMENU-CURID');
       this.menuArr = [];
       this.curMenuArr.forEach((item) => {
         item.dropDown = false;
         this.menuArr.push(item);
       });
-      let localStoId=localStorage.getItem('cusMenu-curId')
-      if(localStoId){
-         this.curMenuArr.forEach((item) => {
-           if(localStoId==item.id){
- //window.location.href= item.url;
+      /* eslint-disable */
+      if (this.isRefresh) {
+        if (this.curId) {
+          this.curMenuArr.forEach((item) => {
+            if (this.curId == item.id) {
+              window.location.href= item.url;
 
-           }
-          if( item.menuPermissionDTOList){
-  item.menuPermissionDTOList.forEach((sonItem)=>{
-               if(localStoId==sonItem.id){
- //window.location.href= sonItem.url;
+            }
+            if (item.menuPermissionDTOList) {
+              item.menuPermissionDTOList.forEach((sonItem) => {
+                if (this.curId == sonItem.id) {
+                  window.location.href= sonItem.url;
 
-           }
-
-           })
-          }
-
-         })
+                }
+              });
+            }
+          });
+        }
       }
     },
   };

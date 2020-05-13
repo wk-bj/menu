@@ -16,16 +16,15 @@
 
 |参数|说明|类型|是否必填|默认值|
 |---|----|---|-------|-----|
-|curMenuArr|菜单数组|Array|是|{phone: \'\',imgLink: \'\'}|
-|cusCompany|公司信息|Object|否|{logo: \'\',name: \'\',version: \'\',versionImg: \'\',logoutIcon:: \'\'}|
-|cusStyleType|菜单展示样式('1'：logo与公司名之间有分隔线，'2'：logo与公司名之间无分隔线,前提条件必须有logo )|Sting|否|'1'|
+|curMenuArr|菜单数组{icon: \'\',id: \'\',name:\'\',menuPermissionDTOList\[\]},其中menuPermissionDTOList代表子菜单|Array|是|--|
+|isRefresh|是否刷新后重新加载选中菜单 |Boolean|否|false|
 
 ### 方法
 
 |事件名|说明|返回值|
 |---|------|-----|
-|editorInfoClick|编辑机构资料|--|
-|logoutClick|退出登录|--|
+|toPage|一级菜单跳转|item, index, ishaveChild，其中ishaveChild有两个值haveChild代表有子节点,noHaveChild代表无子节点|
+|toSonPage|二级菜单跳转|item, sonItem, index|
 
 <script>
 import WkMenu from './Menu';
@@ -34,103 +33,104 @@ export default {
   data() {
     return {
       menuArr:[
-        {
-          name:'应用管理',
-          icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-          id:1,
-          url:'http://www.baidu.com'
-        },
-         {
-           name:'数据管理',
-            icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-           id:2,
+      {
+              		name: '应用管理',
+              		icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              		id: 1,
+              		url: 'http://www.baidu.com'
+              	},
+              	{
+              		name: '数据管理',
+              		icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              		id: 2,
 
-            menuPermissionDTOList:[
-                          {
-                           name: "数据列表",
-                           parentId: 1,
-                           id:9,
-                           icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-                           url:'http://152.136.69.11/course.html#/',
-                          },
-                          {
-                              name: "添加数据",
-                              parentId: 1,
-                              id:11,
-                                                                                  icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-                             url:'http://152.136.69.11/marketing.html#/',
-                          }
-                      ]
-         },
-          {
-            name:'教务管理',
-             icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-             id:13,
-              url:'',
-               menuPermissionDTOList:[
-                            {
-                             name: "下线课管理",
-                             parentId: 13,
-                             id:18,
-                             icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-                              url:'',
-                            },
-                             {
-                               name: "直播课管理",                                                                        parentId: 11,                                                                             id:10,
-                                                                                        icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-                                                                                                                         url:'',
-                             },
-                               {
-                             name: "下线课管理",
-                             parentId: 13,
-                             id:8,
-                             icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-                              url:'',
-                            },
-                             {
-                               name: "直播课管理",                                                                        parentId: 13,                                                                             id:110,
-                                                                                        icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-                                                                                                                         url:'',
-                             },
-                               {
-                             name: "下线课管理",
-                             parentId: 13,
-                             id:118,
-                             icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-                              url:'',
-                            },
-                             {
-                               name: "直播课管理",                                                                        parentId: 13,                                                                             id:1110,
-                                                                                        icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-                                                                                                                         url:'',
-                             },
-                               {
-                             name: "下线课管理",
-                             parentId: 13,
-                             id:11118,
-                             icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-                              url:'',
-                            },
-                             {
-                               name: "直播课管理",                                                                        parentId: 13,                                                                             id:110,
-                                                                                        icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-                                                                                                                         url:'',
-                             },
-                               {
-                             name: "下线课管理",
-                             parentId: 13,
-                             id:118,
-                             icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-                              url:'',
-                            },
-                             {
-                               name: "直播课管理",                                                                        parentId: 13,                                                                             id:23,
-                                                                                        icon:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
-                                                                                                                         url:'',
-                             }
-                        ]
-          },
-      ],
+              		menuPermissionDTOList: [{
+              				name: "数据列表",
+              				parentId: 1,
+              				id: 21,
+              				icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              				url: 'http://152.136.69.11/course.html#/',
+              			},
+              			{
+              				name: "添加数据",
+              				parentId: 1,
+              				id: 22,
+              				icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              				url: 'http://152.136.69.11/marketing.html#/',
+              			}
+              		]
+              	},
+              	{
+              		name: '教务管理',
+              		icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              		id: 3,
+              		url: '',
+              		menuPermissionDTOList: [{
+              				name: "下线课管理",
+              				parentId: 3,
+              				id: 31,
+              				icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              				url: '',
+              			},
+              			{
+              				name: "直播课管理",
+              				parentId: 3,
+              				id: 32,
+              				icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              				url: '',
+              			},
+              			{
+              				name: "管理课程一",
+              				parentId: 3,
+              				id: 33,
+              				icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              				url: '',
+              			},
+              			{
+              				name: "管理课程二",
+              				parentId: 3,
+              				id: 34,
+              				icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              				url: '',
+              			},
+              			{
+              				name: "管理课程三",
+              				parentId: 3,
+              				id: 35,
+              				icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              				url: '',
+              			},
+              			{
+              				name: "管理课程四",
+              				parentId: 3,
+              				id: 36,
+              				icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              				url: '',
+              			},
+              			{
+              				name: "管理课程五",
+              				parentId: 3,
+              				id: 37,
+              				icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              				url: '',
+              			},
+              			{
+              				name: "管理课程六",
+              				parentId: 3,
+              				id: 38,
+              				icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              				url: '',
+              			},
+              			{
+              				name: "管理课程七",
+              				parentId: 3,
+              				id: 39,
+              				icon: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
+              				url: '',
+              			}
+              		]
+              	},
+              ],
     };
   },
   beforeCreate() {

@@ -11,7 +11,7 @@ $ yarn add wkmenu
 ## B 端菜单组件
 
 ```` html
-<wk-menu />
+<wk-menu :curMenuArr="menuArr"/>
 ````
 
 
@@ -21,17 +21,15 @@ $ yarn add wkmenu
 
 |参数|说明|类型|是否必填|默认值|
 |---|----|---|-------|-----|
-|cusUserInfo|用户信息|Object|否|{phone: \'\',imgLink: \'\'}|
-|cusCompany|公司信息|Object|否|{logo: \'\',name: \'\',version: \'\',versionImg: \'\',logoutIcon:: \'\'}|
-|cusStyleType|菜单展示样式('1'：logo与公司名之间有分隔线，'2'：logo与公司名之间无分隔线,前提条件必须有logo )|Sting|否|'1'|
+|curMenuArr|菜单数组{icon: \'\',id: \'\',name:\'\',menuPermissionDTOList\[\]},其中menuPermissionDTOList代表子菜单|Array|是|--|
+|isRefresh|是否刷新后重新加载选中菜单 |Boolean|否|false|
 
 ### 方法
 
 |事件名|说明|返回值|
 |---|------|-----|
-|editorInfoClick|编辑机构资料|--|
-|logoutClick|退出登录|--|
-
+|toPage|一级菜单跳转|item, index, ishaveChild，其中ishaveChild有两个值haveChild代表有子节点,noHaveChild代表无子节点|
+|toSonPage|二级菜单跳转|item, sonItem, index|
 ## 需要的环境
 
 - node.js >= 9.0.0
