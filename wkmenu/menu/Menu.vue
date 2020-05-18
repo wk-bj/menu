@@ -1,35 +1,43 @@
 <template>
   <div
     class="wkmenu"
-  >
-    <div v-for="(item,index) in menuArr">
-      <!--默认第一项是首页-->
-      <div v-if="index==0" class="wkmenu-content">
-        <div  class="wkmenu-menuItem">
-          <img class="wkmenu-menuItem-icon" :src="item.icon" alt="" @click="toggleItem(item,index)">
-          <div class="wkmenu-menuItem-text" :class="{'wkmenu-menuItem-text-active':curId==item.id}" @click="toggleItem(item,index)">{{item.name}}</div>
-          <img :src="menuSwitchUp" v-if="switchAllFlag" alt="" class="wkmenu-menuswitchicon"  @click="toggleMenuSwitch">
-          <!-- :class="{'wkmenu-menuswitchicon-rotate':switchAllFlag}" -->
-          <img :src="menuSwitchDown" alt="" v-if="!switchAllFlag"  class="wkmenu-menuswitchicon"  @click="toggleMenuSwitch">
-        </div>
-        <!--二级菜单-->
-        <div class="wkmenu-menuItem-silder-content">
-          <div v-for="sonItem in item.menuPermissionDTOList" v-show="item.dropDown" class="wkmenu-menuItem-side">
-            <div class="wkmenu-menuItem-text-son" :class="{'wkmenu-menuItem-text-son-active':curId==sonItem.id}" @click="toggleSonItem(item,sonItem,index)">{{sonItem.name}}</div>
+    @scroll.stop.prevent
+    @click.stop.prevent>
+    <div class="wkmenu-solt" v-show="cusComLogo">
+      <div class="wkmenu-solt-border">
+        <img :src="cusComLogo"  class="wkmenu-logo-icons" />
+      </div>
+    </div>
+    <div :style="styleHight?`height:${styleHight}`:''" class="wkmenu-box" @scroll.stop.prevent>
+      <div v-for="(item,index) in menuArr">
+        <!--默认第一项是首页-->
+        <div v-if="index==0" class="wkmenu-content">
+          <div  class="wkmenu-menuItem">
+            <img class="wkmenu-menuItem-icon" :src="item.icon" alt="" @click="toggleItem(item,index)">
+            <div class="wkmenu-menuItem-text" :class="{'wkmenu-menuItem-text-active':curId==item.id}" @click="toggleItem(item,index)">{{item.name}}</div>
+            <img :src="menuSwitchUp" v-if="switchAllFlag" alt="" class="wkmenu-menuswitchicon"  @click="toggleMenuSwitch">
+            <!-- :class="{'wkmenu-menuswitchicon-rotate':switchAllFlag}" -->
+            <img :src="menuSwitchDown" alt="" v-if="!switchAllFlag"  class="wkmenu-menuswitchicon"  @click="toggleMenuSwitch">
+          </div>
+          <!--二级菜单-->
+          <div class="wkmenu-menuItem-silder-content">
+            <div v-for="sonItem in item.menuPermissionDTOList" v-show="item.dropDown" class="wkmenu-menuItem-side">
+              <div class="wkmenu-menuItem-text-son" :class="{'wkmenu-menuItem-text-son-active':curId==sonItem.id}" @click="toggleSonItem(item,sonItem,index)">{{sonItem.name}}</div>
+            </div>
           </div>
         </div>
-      </div>
-      <!--一级菜单-->
+        <!--一级菜单-->
 
-      <div v-else class="wkmenu-content" :class="{'wkmenu-close':item.dropDown}">
-        <div class="wkmenu-menuItem"  @click="toggleItem(item,index)">
-          <img class="wkmenu-menuItem-icon" :src="item.icon" alt="">
-          <div class="wkmenu-menuItem-text" :class="{'wkmenu-menuItem-text-active':curId==item.id}">{{item.name}}</div>
-        </div>
-        <!--二级菜单-->
-        <div class="wkmenu-menuItem-silder-content"  >
-          <div v-for="sonItem in item.menuPermissionDTOList"  class="wkmenu-menuItem-side">
-            <div class="wkmenu-menuItem-text-son" :class="{'wkmenu-menuItem-text-son-active':curId==sonItem.id}" @click="toggleSonItem(item,sonItem,index)">{{sonItem.name}}</div>
+        <div v-else class="wkmenu-content" :class="{'wkmenu-close':item.dropDown}">
+          <div class="wkmenu-menuItem"  @click="toggleItem(item,index)">
+            <img class="wkmenu-menuItem-icon" :src="item.icon" alt="">
+            <div class="wkmenu-menuItem-text" :class="{'wkmenu-menuItem-text-active':curId==item.id}">{{item.name}}</div>
+          </div>
+          <!--二级菜单-->
+          <div class="wkmenu-menuItem-silder-content"  >
+            <div v-for="sonItem in item.menuPermissionDTOList"  class="wkmenu-menuItem-side">
+              <div class="wkmenu-menuItem-text-son" :class="{'wkmenu-menuItem-text-son-active':curId==sonItem.id}" @click="toggleSonItem(item,sonItem,index)">{{sonItem.name}}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -46,9 +54,18 @@
         menuArr: [],
         curId: null || localStorage.getItem('CUSMENU-CURID'),
         switchAllFlag: false,
+        styleHight: '',
       };
     },
     props: {
+      // cusMenuHeight: {
+      //   type: String,
+      //   default: '',
+      // },
+      cusComLogo: {
+        type: String,
+        default: '',
+      },
       isRefresh: {
         type: Boolean,
         default: false,
@@ -67,6 +84,16 @@
       },
     },
     methods: {
+      getClientHeight() {
+        /* eslint-disable */
+        var clientHeight = 0;
+        if (document.body.clientHeight&&document.documentElement.clientHeight) {
+          var clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+        } else {
+          var clientHeight = (document.body.clientHeight>document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+        }
+        return clientHeight;
+      },
       toggleItem(item, index) {
         console.log('item', item);
         if (item.menuPermissionDTOList && item.menuPermissionDTOList.length > 0) {
@@ -99,6 +126,11 @@
       },
     },
     mounted() {
+      this.styleHight = this.getClientHeight()+'px';
+      window.onresize = ()=>{
+        this.styleHight = this.getClientHeight()+'px';
+      }
+      console.log('zhelki', this.styleHight);
       //页面加载时根据，storage记录id打开页面????todo,跳转是否相同域名需要用vue.push
       this.curId = localStorage.getItem('CUSMENU-CURID');
       this.menuArr = [];
@@ -126,5 +158,19 @@
         }
       }
     },
+    // watch: {
+    //   cusMenuHeight: {
+    //     handler(newName) {
+    //       if(newName) {
+    //         console.log('newName',newName)
+    //         this.styleObject= {
+    //            height: newName,
+    //            overflowY: 'scroll',
+    //         }
+    //       }
+    //     },
+    //     immediate: true
+    //   },
+    // },
   };
 </script>

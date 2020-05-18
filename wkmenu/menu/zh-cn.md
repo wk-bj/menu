@@ -4,10 +4,10 @@
 ## B 端菜单组件
 > Vue 引入
 
-<wk-menu :curMenuArr="menuArr"/>
+<wk-menu :curMenuArr="menuArr" :cusComLogo="comLogo"/>
 
 ```` html
-<wk-menu :curMenuArr="menuArr"/>
+<wk-menu :curMenuArr="menuArr" :cusComLogo="comLogo"/>
 ````
 
 ## API
@@ -18,6 +18,7 @@
 |---|----|---|-------|-----|
 |curMenuArr|菜单数组{icon: \'\',id: \'\',name:\'\',menuPermissionDTOList\[\]},其中menuPermissionDTOList代表子菜单|Array|是|--|
 |isRefresh|是否刷新后重新加载选中菜单 |Boolean|否|false|
+/cusComLogo/菜单头部logo |String|否|--|
 
 ### 方法
 
@@ -131,6 +132,7 @@ export default {
               		]
               	},
               ],
+      comLogo: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589198111077&di=3b683f0dfccfa94df2edbd2b4d3d4d77&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg',
     };
   },
   beforeCreate() {

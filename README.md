@@ -11,7 +11,7 @@ $ yarn add wkmenu
 ## B 端菜单组件
 
 ```` html
-<wk-menu :curMenuArr="menuArr"/>
+<wk-menu :curMenuArr="menuArr" :cusComLogo="comLogo"/>
 ````
 
 
@@ -23,6 +23,7 @@ $ yarn add wkmenu
 |---|----|---|-------|-----|
 |curMenuArr|菜单数组{icon: \'\',id: \'\',name:\'\',menuPermissionDTOList\[\]},其中menuPermissionDTOList代表子菜单|Array|是|--|
 |isRefresh|是否刷新后重新加载选中菜单 |Boolean|否|false|
+/cusComLogo/菜单头部logo |String|否|--|
 
 ### 方法
 
