@@ -14,7 +14,7 @@
         <div v-if="index==0" class="wkmenu-content">
           <div  class="wkmenu-menuItem">
             <img class="wkmenu-menuItem-icon" :src="item.icon" alt="" @click="toggleItem(item,index)">
-            <div class="wkmenu-menuItem-text" :class="{'wkmenu-menuItem-text-active':curId==item.id}" @click="toggleItem(item,index)">{{item.name}}</div>
+            <div class="wkmenu-menuItem-text" :class="{'wkmenu-menuItem-text-active':(curActiveUrl&&item.totalUrl&&item.totalUrl.indexOf(curActiveUrl)!=-1)||curId==item.id}" @click="toggleItem(item,index)">{{item.name}}</div>
             <img :src="menuSwitchUp" v-if="switchAllFlag" alt="" class="wkmenu-menuswitchicon"  @click="toggleMenuSwitch">
             <!-- :class="{'wkmenu-menuswitchicon-rotate':switchAllFlag}" -->
             <img :src="menuSwitchDown" alt="" v-if="!switchAllFlag"  class="wkmenu-menuswitchicon"  @click="toggleMenuSwitch">
@@ -22,7 +22,7 @@
           <!--二级菜单-->
           <div class="wkmenu-menuItem-silder-content">
             <div v-for="sonItem in item.menuPermissionDTOList" v-show="item.dropDown" class="wkmenu-menuItem-side">
-              <div class="wkmenu-menuItem-text-son" :class="{'wkmenu-menuItem-text-son-active':curId==sonItem.id}" @click="toggleSonItem(item,sonItem,index)">{{sonItem.name}}</div>
+              <div class="wkmenu-menuItem-text-son" :class="{'wkmenu-menuItem-text-son-active':(curActiveUrl&&sonItem.totalUrl&&sonItem.totalUrl.indexOf(curActiveUrl)!=-1||curId==sonItem.id)}" @click="toggleSonItem(item,sonItem,index)">{{sonItem.name}}</div>
             </div>
           </div>
         </div>
@@ -31,12 +31,12 @@
         <div v-else class="wkmenu-content" :class="{'wkmenu-close':item.dropDown}">
           <div class="wkmenu-menuItem"  @click="toggleItem(item,index)">
             <img class="wkmenu-menuItem-icon" :src="item.icon" alt="">
-            <div class="wkmenu-menuItem-text" :class="{'wkmenu-menuItem-text-active':curId==item.id}">{{item.name}}</div>
+            <div class="wkmenu-menuItem-text" :class="{'wkmenu-menuItem-text-active':(curActiveUrl&&item.totalUrl&&item.totalUrl.indexOf(curActiveUrl)!=-1)||curId==item.id}">{{item.name}}</div>
           </div>
           <!--二级菜单-->
           <div class="wkmenu-menuItem-silder-content"  >
             <div v-for="sonItem in item.menuPermissionDTOList"  class="wkmenu-menuItem-side">
-              <div class="wkmenu-menuItem-text-son" :class="{'wkmenu-menuItem-text-son-active':curId==sonItem.id}" @click="toggleSonItem(item,sonItem,index)">{{sonItem.name}}</div>
+              <div class="wkmenu-menuItem-text-son" :class="{'wkmenu-menuItem-text-son-active':(curActiveUrl&&sonItem.totalUrl&&sonItem.totalUrl.indexOf(curActiveUrl)!=-1)||curId==sonItem.id}" @click="toggleSonItem(item,sonItem,index)">{{sonItem.name}}</div>
             </div>
           </div>
         </div>
@@ -52,9 +52,10 @@
     data() {
       return {
         menuArr: [],
-        curId: null || localStorage.getItem('CUSMENU-CURID'),
+        curId: '',
         switchAllFlag: false,
         styleHight: '',
+        curActiveUrl: '',
       };
     },
     props: {
@@ -66,7 +67,7 @@
         type: String,
         default: '',
       },
-      isRefresh: {
+      isToWinUrl: {
         type: Boolean,
         default: false,
       },
@@ -95,28 +96,31 @@
         return clientHeight;
       },
       toggleItem(item, index) {
-        console.log('item', item);
         if (item.menuPermissionDTOList && item.menuPermissionDTOList.length > 0) {
-          console.log('展示子页面');
           this.menuArr[index].dropDown = !this.menuArr[index].dropDown;
           this.$set(this.menuArr, index, this.menuArr[index]);
           this.$emit('toPage', item, index, 'haveChild');
         } else {
-          this.curId = item.id;
-          localStorage.setItem('CUSMENU-CURID', item.id);
-          console.log('跳转');
+         this.curId = item.id;
+         localStorage.setItem('WKMENU_CURID', item.id);
+          this.curActiveUrl = item.totalUrl
+         // localStorage.setItem('CUS_CURACTIVEURL', item.totalUrl)
           //直接跳转
           this.$emit('toPage', item, index, 'noHaveChild');
-          window.location.href = item.url;
+          if(this.isToWinUrl){
+            window.location.href = item.url;
+          }
         }
       },
       toggleSonItem(item, sonItem, index) {
-        this.curId = sonItem.id;
-        localStorage.setItem('CUSMENU-CURID', sonItem.id);
-        console.log('item', item, sonItem, index);
-        console.log('二级直接跳转');
+       this.curId = sonItem.id;
+       localStorage.setItem('WKMENU_CURID', sonItem.id);
+        this.curActiveUrl = sonItem.totalUrl
+       // localStorage.setItem('CUS_CURACTIVEURL', sonItem.totalUrl)
         this.$emit('toSonPage', item, sonItem, index);
-        window.location.href = sonItem.url;
+        if(this.isToWinUrl){
+          window.location.href = sonItem.url;
+        }
       },
       toggleMenuSwitch() {
         this.switchAllFlag = !this.switchAllFlag;
@@ -126,37 +130,37 @@
       },
     },
     mounted() {
-      this.styleHight = this.getClientHeight()+'px';
+      this.curActiveUrl=window.location.href&&window.location.href.split('?')[0];
+      this.styleHight= this.getClientHeight()+'px';
       window.onresize = ()=>{
         this.styleHight = this.getClientHeight()+'px';
       }
-      console.log('zhelki', this.styleHight);
       //页面加载时根据，storage记录id打开页面????todo,跳转是否相同域名需要用vue.push
-      this.curId = localStorage.getItem('CUSMENU-CURID');
+     this.curId = localStorage.getItem('WKMENU_CURID');
       this.menuArr = [];
       this.curMenuArr.forEach((item) => {
         item.dropDown = false;
         this.menuArr.push(item);
       });
       /* eslint-disable */
-      if (this.isRefresh) {
-        if (this.curId) {
-          this.curMenuArr.forEach((item) => {
-            if (this.curId == item.id) {
-              window.location.href= item.url;
-
-            }
-            if (item.menuPermissionDTOList) {
-              item.menuPermissionDTOList.forEach((sonItem) => {
-                if (this.curId == sonItem.id) {
-                  window.location.href= sonItem.url;
-
-                }
-              });
-            }
-          });
-        }
-      }
+      // if (this.isToWinUrl) {
+      //   if (this.curId) {
+      //     this.curMenuArr.forEach((item) => {
+      //       if (this.curId == item.id) {
+      //         window.location.href= item.url;
+      //
+      //       }
+      //       if (item.menuPermissionDTOList) {
+      //         item.menuPermissionDTOList.forEach((sonItem) => {
+      //           if (this.curId == sonItem.id) {
+      //             window.location.href= sonItem.url;
+      //
+      //           }
+      //         });
+      //       }
+      //     });
+      //   }
+      // }
     },
     // watch: {
     //   cusMenuHeight: {
