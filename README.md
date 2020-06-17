@@ -31,6 +31,7 @@ $ yarn add wkmenu
 |---|------|-----|
 |toPage|一级菜单跳转|item, index, ishaveChild，其中ishaveChild有两个值haveChild代表有子节点,noHaveChild代表无子节点|
 |toSonPage|二级菜单跳转|item, sonItem, index|
+|customHomeClick|点击logo|--|
 ## 需要的环境
 
 - node.js >= 9.0.0

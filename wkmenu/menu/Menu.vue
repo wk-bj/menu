@@ -5,7 +5,7 @@
     @click.stop.prevent>
     <div class="wkmenu-solt" v-show="cusComLogo">
       <div class="wkmenu-solt-border">
-        <img :src="cusComLogo"  class="wkmenu-logo-icons" />
+        <img :src="cusComLogo"  class="wkmenu-logo-icons" @click="toHome"/>
       </div>
     </div>
     <div :style="styleHight?`height:${styleHight}`:''" class="wkmenu-box" @scroll.stop.prevent>
@@ -128,20 +128,23 @@
           item.dropDown = this.switchAllFlag;
         });
       },
+        toHome() {
+            this.$emit('customHomeClick');
+        }
     },
     mounted() {
       this.curActiveUrl=window.location.href&&window.location.href.split('?')[0];
-      this.styleHight= this.getClientHeight()+'px';
+      this.styleHight= (this.getClientHeight()-50)+'px';
       window.onresize = ()=>{
-        this.styleHight = this.getClientHeight()+'px';
+        this.styleHight = (this.getClientHeight()-50)+'px';
       }
-      //页面加载时根据，storage记录id打开页面????todo,跳转是否相同域名需要用vue.push
-     this.curId = localStorage.getItem('WKMENU_CURID');
+
       this.menuArr = [];
       this.curMenuArr.forEach((item) => {
         item.dropDown = false;
         this.menuArr.push(item);
       });
+        this.curId = localStorage.getItem('WKMENU_CURID');
       /* eslint-disable */
       // if (this.isToWinUrl) {
       //   if (this.curId) {
@@ -162,19 +165,15 @@
       //   }
       // }
     },
-    // watch: {
-    //   cusMenuHeight: {
-    //     handler(newName) {
-    //       if(newName) {
-    //         console.log('newName',newName)
-    //         this.styleObject= {
-    //            height: newName,
-    //            overflowY: 'scroll',
-    //         }
-    //       }
-    //     },
-    //     immediate: true
-    //   },
-    // },
+    watch: {
+      curMenuArr: {
+        handler(newName) {
+          if(newName) {
+            this.menuArr=newName
+          }
+        },
+        immediate: true
+      },
+    },
   };
 </script>

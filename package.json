@@ -1,6 +1,6 @@
 {
   "name": "wkmenu",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Vue.js 菜单组件",
   "author": "hongsusu <1042122270@qq.com>",
   "main": "dist/wkmenu.js",
