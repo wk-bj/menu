@@ -14,7 +14,7 @@
         <div v-if="index==0" class="wkmenu-content">
           <div  class="wkmenu-menuItem">
             <img class="wkmenu-menuItem-icon" :src="item.icon" alt="" @click="toggleItem(item,index)">
-            <div class="wkmenu-menuItem-text" :class="{'wkmenu-menuItem-text-active':(curActiveUrl&&item.totalUrl&&item.totalUrl.indexOf(curActiveUrl)!=-1)||curId==item.id}" @click="toggleItem(item,index)">{{item.name}}</div>
+            <div class="wkmenu-menuItem-text" :class="{'wkmenu-menuItem-text-active':(!curId&&curActiveUrl&&item.totalUrl&&item.totalUrl.indexOf(!curId&&curActiveUrl)!=-1)||curId==item.id}" @click="toggleItem(item,index)">{{item.name}}</div>
             <img :src="menuSwitchUp" v-if="switchAllFlag" alt="" class="wkmenu-menuswitchicon"  @click="toggleMenuSwitch">
             <!-- :class="{'wkmenu-menuswitchicon-rotate':switchAllFlag}" -->
             <img :src="menuSwitchDown" alt="" v-if="!switchAllFlag"  class="wkmenu-menuswitchicon"  @click="toggleMenuSwitch">
@@ -22,7 +22,7 @@
           <!--二级菜单-->
           <div class="wkmenu-menuItem-silder-content">
             <div v-for="sonItem in item.menuPermissionDTOList" v-show="item.dropDown" class="wkmenu-menuItem-side">
-              <div class="wkmenu-menuItem-text-son" :class="{'wkmenu-menuItem-text-son-active':(curActiveUrl&&sonItem.totalUrl&&sonItem.totalUrl.indexOf(curActiveUrl)!=-1||curId==sonItem.id)}" @click="toggleSonItem(item,sonItem,index)">{{sonItem.name}}</div>
+              <div class="wkmenu-menuItem-text-son" :class="{'wkmenu-menuItem-text-son-active':(!curId&&curActiveUrl&&sonItem.totalUrl&&sonItem.totalUrl.indexOf(!curId&&curActiveUrl)!=-1||curId==sonItem.id)}" @click="toggleSonItem(item,sonItem,index)">{{sonItem.name}}</div>
             </div>
           </div>
         </div>
@@ -31,12 +31,12 @@
         <div v-else class="wkmenu-content" :class="{'wkmenu-close':item.dropDown}">
           <div class="wkmenu-menuItem"  @click="toggleItem(item,index)">
             <img class="wkmenu-menuItem-icon" :src="item.icon" alt="">
-            <div class="wkmenu-menuItem-text" :class="{'wkmenu-menuItem-text-active':(curActiveUrl&&item.totalUrl&&item.totalUrl.indexOf(curActiveUrl)!=-1)||curId==item.id}">{{item.name}}</div>
+            <div class="wkmenu-menuItem-text" :class="{'wkmenu-menuItem-text-active':(!curId&&curActiveUrl&&item.totalUrl&&item.totalUrl.indexOf(curActiveUrl)!=-1)||curId==item.id}">{{item.name}}</div>
           </div>
           <!--二级菜单-->
           <div class="wkmenu-menuItem-silder-content"  >
             <div v-for="sonItem in item.menuPermissionDTOList"  class="wkmenu-menuItem-side">
-              <div class="wkmenu-menuItem-text-son" :class="{'wkmenu-menuItem-text-son-active':(curActiveUrl&&sonItem.totalUrl&&sonItem.totalUrl.indexOf(curActiveUrl)!=-1)||curId==sonItem.id}" @click="toggleSonItem(item,sonItem,index)">{{sonItem.name}}</div>
+              <div class="wkmenu-menuItem-text-son" :class="{'wkmenu-menuItem-text-son-active':(!curId&&curActiveUrl&&sonItem.totalUrl&&sonItem.totalUrl.indexOf(curActiveUrl)!=-1)||curId==sonItem.id}" @click="toggleSonItem(item,sonItem,index)">{{sonItem.name}}</div>
             </div>
           </div>
         </div>
@@ -65,6 +65,9 @@
       // },
       cusComLogo: {
         type: String,
+        default: '',
+      },
+      curIdPrpo: {
         default: '',
       },
       isToWinUrl: {
@@ -174,6 +177,14 @@
         },
         immediate: true
       },
+        curIdPrpo: {
+            handler(newName) {
+                if(newName) {
+                    this.curId = newName
+                }
+            },
+            immediate: true
+        }
     },
   };
 </script>
