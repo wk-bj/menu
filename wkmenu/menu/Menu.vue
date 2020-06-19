@@ -166,6 +166,19 @@
                 })
             })
         }
+        if(this.curPath) {
+            console.log('进入这个了')
+            this.menuArr.forEach(item=>{
+                if(item.url == this.curPath){
+                    this.curId= item.id
+                }
+                item.menuPermissionDTOList.forEach(sonItem=>{
+                    if(sonItem.url == this.curPath){
+                        this.curId= sonItem.id
+                    }
+                })
+            })
+        }
       /* eslint-disable */
       // if (this.isToWinUrl) {
       //   if (this.curId) {
@@ -204,6 +217,19 @@
                       }
                       item.menuPermissionDTOList.forEach(sonItem=>{
                           if(sonItem.url == this.curActiveUrl){
+                              this.curId= sonItem.id
+                          }
+                      })
+                  })
+              }
+              if(this.curPath) {
+                  console.log('进入这个了')
+                  this.menuArr.forEach(item=>{
+                      if(item.url == this.curPath){
+                          this.curId= item.id
+                      }
+                      item.menuPermissionDTOList.forEach(sonItem=>{
+                          if(sonItem.url == this.curPath){
                               this.curId= sonItem.id
                           }
                       })
