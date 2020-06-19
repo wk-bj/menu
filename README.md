@@ -24,6 +24,7 @@ $ yarn add wkmenu
 |curMenuArr|菜单数组{icon: \'\',id: \'\',name:\'\',url: \'\',totalUrl: \'\',menuPermissionDTOList\[\]},其中menuPermissionDTOList代表子菜单|Array|是|--|
 |isToWinUrl|是否全路径跳转 |Boolean|否|false|
 /cusComLogo/菜单头部logo |String|否|--|
+/curPath/对比路径 |String|是|--|
 
 ### 方法
 
